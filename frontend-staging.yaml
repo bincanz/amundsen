@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: amundsen
+    meta.helm.sh/release-namespace: amundsen
+#    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-west-2:785155980822:certificate/5a90203e-dd46-4fb3-a082-4c67b3cfe46e
+#    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+#    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+#    external-dns.alpha.kubernetes.io/hostname: amundsen-staging.staging.hippo-private.com
+  finalizers:
+  - service.kubernetes.io/load-balancer-cleanup
+  labels:
+    app: amundsen
+    app.kubernetes.io/managed-by: Helm
+    chart: amundsen-2.1.2
+    component: frontend
+    heritage: Helm
+    release: amundsen
+    run: amundsen-frontend
+  name: amundsen-frontend
+  namespace: amundsen
+spec:
+  clusterIP: 172.20.131.229
+  clusterIPs:
+  - 172.20.131.229
+  externalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: amundsen-frontend-staging-http
+    nodePort: 32128
+    port: 443
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: amundsen
+    component: frontend
+    release: amundsen
+  sessionAffinity: None
+  type: LoadBalancer

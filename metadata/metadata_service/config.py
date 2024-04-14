@@ -18,7 +18,6 @@ PROXY_USER = 'PROXY_USER'
 PROXY_PASSWORD = 'PROXY_PASSWORD'
 PROXY_ENCRYPTED = 'PROXY_ENCRYPTED'
 PROXY_VALIDATE_SSL = 'PROXY_VALIDATE_SSL'
-PROXY_DATABASE_NAME = 'PROXY_DATABASE_NAME'
 PROXY_CLIENT = 'PROXY_CLIENT'
 PROXY_CLIENT_KWARGS = 'PROXY_CLIENT_KWARGS'
 
@@ -59,19 +58,100 @@ class Config:
     PROXY_VALIDATE_SSL = False
     """Whether the SSL/TLS certificate presented by the user should be validated against the system's trusted CAs."""
 
-    PROXY_DATABASE_NAME = None
-
     IS_STATSD_ON = False
 
     # Configurable dictionary to influence format of column statistics displayed in UI
     STATISTICS_FORMAT_SPEC: Dict[str, Dict] = {}
 
     # whitelist badges
-    WHITELIST_BADGES: List[Badge] = []
+    WHITELIST_BADGES: List[Badge] = [
+        Badge(badge_name='alpha',
+              category='table_status'),
+        Badge(badge_name='beta',
+              category='table_status'),
+    ]
 
     SWAGGER_ENABLED = os.environ.get('SWAGGER_ENABLED', False)
 
-    USER_DETAIL_METHOD = None  # type: Optional[function]
+    # USER_DETAIL_METHOD = None   # type: Optional[function]
+
+    # def get_user_from_oidc(user_id: str) -> Dict:
+    #     metadata = app.auth_client.load_server_metadata()
+    #     search_endpoint = f'{metadata["issuer"]}/api/v1/users?q={user_id}&limit=1'
+    #
+    #     _not_found_error = f"User Not Found in the OIDC Provider. User ID: {user_id}"
+    #
+    #     response = app.auth_client.get(search_endpoint)
+    #     response.raise_for_status()
+    #     user_info = response.json()
+    #     if not user_info:
+    #         raise NotFoundException(_not_found_error)
+    #     user_data = dict()
+    #     _user = user_info[0]
+    #
+    #     user_data.update(_user["profile"])
+    #     user_data.update({
+    #         "name": f'{_user["profile"]["firstName"]} {_user["profile"]["lastName"]}'
+    #     })
+    #     profile_url = _user.get("_links", {}).get("self", {}).get("href")
+    #     user_data.update({"profile_url": profile_url})
+    #
+    #     return {
+    #         "user_id": user_id,
+    #         "email": user_data["email"],
+    #         "first_name": user_data["firstName"],
+    #         "last_name": user_data["lastName"],
+    #         "full_name": user_data["name"],
+    #         "display_name": user_data["name"],
+    #         "profile_url": user_data["profile_url"],
+    #     }
+    #
+    # def get_user_details(user_id: str) -> Dict:
+    #     client = get_proxy_client()
+    #     schema = UserSchema()
+    #     try:
+    #         return schema.dump(client.get_user(id=user_id))
+    #     except NotFoundException:
+    #         print("User not found in the database. Trying to create one using oidc.get_user_detail")
+    #         # LOGGER.info("User not found in the database. Trying to create one using oidc.get_user_detail")
+    #
+    #     if not hasattr(app, 'auth_client'):
+    #         raise OpenIDConnectNotConfigured
+    #
+    #     try:
+    #         user_info = get_user_from_oidc(user_id=user_id)
+    #
+    #         user = schema.load(user_info)
+    #         new_user, is_created = client.create_update_user(user=user)
+    #         return schema.dump(new_user)
+    #
+    #     except Exception as ex:
+    #         # LOGGER.exception(str(ex), exc_info=True)
+    #         # Return the required information only
+    #         return {
+    #             "email": user_id,
+    #             "user_id": user_id,
+    #         }
+
+    # def get_user_details(user_id):
+    #     user_info = {
+    #         'email': 'test@email.com',
+    #         'user_id': user_id,
+    #         'first_name': 'Firstname',
+    #         'last_name': 'Lastname',
+    #         'full_name': 'Firstname Lastname',
+    #     }
+    #     return user_info
+    #
+
+    def get_user_details(user_id):
+        user_info = {
+            'email': user_id,
+            'user_id': user_id,
+        }
+        return user_info
+
+    USER_DETAIL_METHOD = get_user_details
 
     RESOURCE_REPORT_CLIENT = None  # type: Optional[function]
 
@@ -165,8 +245,7 @@ try:
 
         PROXY_CLIENT_KWARGS = {
             'neptune_bulk_loader_s3_bucket_name': os.environ.get('S3_BUCKET_NAME'),
-            'ignore_neptune_shard': distutils.util.strtobool(os.environ.get('IGNORE_NEPTUNE_SHARD', 'True')),
-            'sts_endpoint': os.environ.get('STS_ENDPOINT')
+            'ignore_neptune_shard': distutils.util.strtobool(os.environ.get('IGNORE_NEPTUNE_SHARD', 'True'))
         }
 
         JANUS_GRAPH_URL = None

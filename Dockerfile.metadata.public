@@ -1,4 +1,4 @@
-FROM python:3.8-slim as base
+FROM python:3.7-slim as base
 WORKDIR /app
 RUN pip3 install gunicorn
 
@@ -23,6 +23,11 @@ ENV FLASK_OIDC_WHITELISTED_ENDPOINTS status,healthcheck,health
 ENV SQLALCHEMY_DATABASE_URI sqlite:///sessions.db
 
 # You will need to set these environment variables in order to use the oidc image
+ENV FLASK_OIDC_CONFIG_URL https://dev-23343625.okta.com/.well-known/openid-configuration
+ENV FLASK_OIDC_PROVIDER_NAME okta
+ENV FLASK_OIDC_CLIENT_ID 0oa3s36t0fnb8TpIM5d7
+ENV FLASK_OIDC_CLIENT_SECRET S1FcZzl02YqpXrNqyQi7noixX5K8VHVjCE19bSZ1
+
 # FLASK_OIDC_CONFIG_URL - url endpoint for your oidc provider config
 # FLASK_OIDC_PROVIDER_NAME - oidc provider name
 # FLASK_OIDC_CLIENT_ID - oidc client id

@@ -1,0 +1,33 @@
+apiVersion: v1
+data:
+  FLASK_APP_CLASS_NAME: FlaskOIDC
+  FLASK_APP_MODULE_NAME: flaskoidc
+  FLASK_OIDC_CLIENT_ID: 0oa3s36t0fnb8TpIM5d7
+  FLASK_OIDC_CLIENT_SECRET: S1FcZzl02YqpXrNqyQi7noixX5K8VHVjCE19bSZ1
+  FLASK_OIDC_CONFIG_URL: https://dev-23343625.okta.com/.well-known/openid-configuration
+  FLASK_OIDC_PROVIDER_NAME: okta
+  FLASK_OIDC_REDIRECT_URI: /authorization-code/callback
+  FLASK_OIDC_SCOPES: openid email profile
+  FLASK_OIDC_USER_ID_FIELD: email
+  FLASK_OIDC_WHITELISTED_ENDPOINTS: status,healthcheck,health
+  FRONTEND_BASE: http://localhost
+  LONG_RANDOM_STRING: "1234"
+  METADATASERVICE_BASE: http://amundsen-metadata:5002
+  SEARCHSERVICE_BASE: http://amundsen-search:5001
+kind: ConfigMap
+metadata:
+  annotations:
+    meta.helm.sh/release-name: amundsen
+    meta.helm.sh/release-namespace: amundsen
+  creationTimestamp: "2021-12-13T07:22:43Z"
+  labels:
+    app: amundsen
+    app.kubernetes.io/managed-by: Helm
+    chart: amundsen-2.1.2
+    component: frontend
+    heritage: Helm
+    release: amundsen
+  name: amundsen-frontend
+  namespace: amundsen
+  resourceVersion: "20617572"
+  uid: 3223840f-d39a-4e21-b73b-cfe897c8d4ba

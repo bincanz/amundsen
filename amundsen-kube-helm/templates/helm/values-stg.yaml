@@ -5,7 +5,7 @@ clusterDomain: cluster.local
 # common settings for all apps
 # NOTE - README table was generated with https://github.com/norwoodj/helm-docs
 # environment -- **DEPRECATED - its not standard to pre construct urls this way.** The environment the app is running in. Used to construct dns hostnames (on aws only) and ports.
-environment: "dev"
+environment: "staging"
 
 # DEPRECATED - its not standard to pre construct urls this way
 # provider -- The cloud provider the app is running in. Used to construct dns hostnames (on aws only).
@@ -58,7 +58,7 @@ oidc:
     client_id: "0oa3t3120sCnYzuQZ5d7" #"0oa3s36t0fnb8TpIM5d7"
     # Do not paste the secret directly here, instead set this via env variable like
     # `--set oidc.frontend.client_secret=$OIDC_FRONTEND_CLIENT_SECRET`
-    client_secret: "--set oidc.frontend.client_secret=$OIDC_FRONTEND_CLIENT_SECRET" #"ZIuURwhHoJCgy1Tz515xAsv1BQBd0lYXQLBkHorL" #"S1FcZzl02YqpXrNqyQi7noixX5K8VHVjCE19bSZ1"
+    client_secret: #"--set oidc.frontend.client_secret=$OIDC_FRONTEND_CLIENT_SECRET" #"ZIuURwhHoJCgy1Tz515xAsv1BQBd0lYXQLBkHorL" #"S1FcZzl02YqpXrNqyQi7noixX5K8VHVjCE19bSZ1"
   metadata:
     client_id: "0oa3t3120sCnYzuQZ5d7" #"0oa3s36t0fnb8TpIM5d7"
     # Do not paste the secret directly here, instead set this via env variable like
@@ -102,7 +102,7 @@ search:
   proxy:
     # search.proxy.endpoint -- Endpoint of the search proxy (i.e., ES endpoint etc.)
     # You should only need to change this, if you don't use the version in this chart.
-    endpoint: 
+    endpoint:
 
     # The user and password of the search proxy. This should only be set if you bring your own proxy or ES cluster in which case you must also set elasticsearch.enabled to false
     # search.proxy.user --
@@ -122,10 +122,6 @@ search:
 
   # search.replicas -- How many replicas of the search service to run.
   replicas: 1
-
-  # search.config.class -- Optional Config class.
-  config:
-    class:
 
   # search.resources -- See pod resourcing [ref](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
   resources: {}
@@ -178,7 +174,7 @@ metadata:
     password:
 
   # metadata.image -- The image of the metadata container.
-  image: amundsendev/amundsen-metadata #758725034686.dkr.ecr.us-west-2.amazonaws.com/amundsen-metadata # -oidc #
+  image: amundsendev/amundsen-metadata #-oidc #758725034686.dkr.ecr.us-west-2.amazonaws.com/amundsen-metadata #  #
 
   # metadata.imagePullSecrets -- Optional pod imagePullSecrets [ref](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
   imagePullSecrets: []
@@ -189,10 +185,6 @@ metadata:
 
   # metadata.replicas -- How many replicas of the metadata service to run.
   replicas: 1
-
-  # metadata.config.class -- Optional Config class.
-  config:
-    class:
 
   # metadata.resources -- See pod resourcing [ref](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
   resources: {}
@@ -230,7 +222,7 @@ frontEnd:
   serviceType: LoadBalancer #ClusterIP
 
   # frontEnd.image -- The image of the frontend container.
-  image: 758725034686.dkr.ecr.us-west-2.amazonaws.com/amundsen #-oidc # amundsendev/amundsen-frontend #
+  image: amundsendev/amundsen-frontend # 785155980822.dkr.ecr.us-west-2.amazonaws.com/amundsen-frontend-staging #-oidc #  #
 
   # frontEnd.imagePullSecrets -- Optional pod imagePullSecrets [ref](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/)
   imagePullSecrets: []
@@ -275,7 +267,11 @@ frontEnd:
   tolerations: []
 
   # frontEnd.annotations -- Frontend service specific tolerations.
-  annotations: {service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0}
+  annotations: {
+#    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0,
+#    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http,
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-west-2:785155980822:certificate/5a90203e-dd46-4fb3-a082-4c67b3cfe46e
+  }
 
   # frontEnd.podAnnotations -- Frontend pod specific annotations.
   podAnnotations: {}
@@ -288,34 +284,8 @@ neo4j:
   # neo4j.enabled -- If neo4j is enabled as part of this chart, or not. Set this to false if you want to provide your own version.
   enabled: true
 
-  # neo4j.image -- The image of the neo4j container.
-  image: neo4j
-
-  # neo4j.imageTag -- The image tag of the neo4j container.
-  imageTag: 3.3.0
-
-  # neo4j.initPluginsContainer -- The image used to install plugins used by neo4j.
-  initPluginsContainer:
-
-    # neo4j.initContainer.image -- The image of the neo4j init container.
-    image: appropriate/curl
-
-    # neo4j.initContainer.imageTag -- The image tag of the neo4j init container.
-    imageTag: latest
-
-    command:
-      - "/bin/sh"
-      - "-c"
-      - |
-        curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.3.0.4/apoc-3.3.0.4-all.jar -O
-        curl -L https://github.com/neo4j-contrib/neo4j-graph-algorithms/releases/download/3.3.5.0/graph-algorithms-algo-3.3.5.0.jar -O
-        curl -L https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/1.11.250/aws-java-sdk-core-1.11.250.jar -O
-        curl -L https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.250/aws-java-sdk-s3-1.11.250.jar -O
-        curl -L https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.4/httpclient-4.5.4.jar -O
-        curl -L https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.8/httpcore-4.4.8.jar -O
-        curl -L https://repo1.maven.org/maven2/joda-time/joda-time/2.9.9/joda-time-2.9.9.jar -O
-        chmod 755 *.jar
-        mv *.jar /var/lib/neo4j/plugins
+  # neo4j.version -- The neo4j application version used by amundsen.
+  version: 3.3.0
 
   # neo4j.resources -- See pod resourcing [ref](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/)
 #  resources: {}
@@ -391,7 +361,7 @@ neo4j:
 elasticsearch:
   # elasticsearch.enabled -- set this to false, if you want to provide your own ES instance.
   enabled: true
-  # -- this is the service name of the amundsen elasticsearch master. Change it if you want to give a new name for the elasticsearch service  
+  # -- this is the service name of the amundsen elasticsearch master. Change it if you want to give a new name for the elasticsearch service
   fullnameOverride: "amundsen-elasticsearch-master"
   # -- If this set to true, the es pod will require some admin privilege, which is not allowed in most case. So set it to false
   sysctlInitContainer:
@@ -409,12 +379,8 @@ elasticsearch:
       memory: 14Gi
     requests:
       memory: 8Gi
-  ulimits:
-    nofile:
-      soft: 65535
-      hard: 65535
-  
-    
+
+
 ##############  Values for ingress ###############
 ingress:
   # --  set this to true, if you want a ingress that expose HTTP and HTTPS routes from outside the cluster to your amundsen services. Do not use this if you are in a public cloud such as AWS, GCP
@@ -426,7 +392,7 @@ ingress:
   hosts:
     - host: amundsen-test.your-domain.com
       paths: [/]
-  tls: 
+  tls:
     - hosts:
         - amundsen-test.your-domain.com
      # secretName: chart-example-tls

@@ -1,0 +1,502 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "9"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"meta.helm.sh/release-name":"amundsen","meta.helm.sh/release-namespace":"amundsen"},"generation":23,"labels":{"app":"amundsen","app.kubernetes.io/managed-by":"Helm","chart":"amundsen-2.1.2","component":"frontend","heritage":"Helm","release":"amundsen"},"name":"amundsen-frontend","namespace":"amundsen"},"spec":{"progressDeadlineSeconds":600,"replicas":1,"revisionHistoryLimit":10,"selector":{"matchLabels":{"app":"amundsen","component":"frontend","release":"amundsen"}},"strategy":{"rollingUpdate":{"maxSurge":"25%","maxUnavailable":"25%"},"type":"RollingUpdate"},"template":{"metadata":{"creationTimestamp":null,"labels":{"app":"amundsen","component":"frontend","release":"amundsen"}},"spec":{"containers":[{"args":["-w","4","--bind",":5000","amundsen_application.wsgi"],"command":["gunicorn"],"envFrom":[{"configMapRef":{"name":"amundsen-frontend"}}],"image":"758725034686.dkr.ecr.us-west-2.amazonaws.com/amundsen:latest","imagePullPolicy":"Always","livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/healthcheck","port":5000,"scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":60,"successThreshold":1,"timeoutSeconds":1},"name":"amundsen-frontend","ports":[{"containerPort":5000,"protocol":"TCP"}],"readinessProbe":{"failureThreshold":5,"httpGet":{"path":"/healthcheck","port":5000,"scheme":"HTTP"},"initialDelaySeconds":10,"periodSeconds":60,"successThreshold":1,"timeoutSeconds":1},"resources":{},"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File"}],"dnsPolicy":"ClusterFirst","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"terminationGracePeriodSeconds":30}}}}
+      meta.helm.sh/release-name: amundsen
+      meta.helm.sh/release-namespace: amundsen
+    creationTimestamp: "2021-12-13T07:22:43Z"
+    generation: 47
+    labels:
+      app: amundsen
+      app.kubernetes.io/managed-by: Helm
+      chart: amundsen-2.1.2
+      component: frontend
+      heritage: Helm
+      release: amundsen
+    name: amundsen-frontend
+    namespace: amundsen
+    resourceVersion: "31064535"
+    uid: 02b54b18-3e51-453d-a99d-1d2fe6c9542b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: amundsen
+        component: frontend
+        release: amundsen
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          checksum/config: d4d5c44bf585ffcbc792bdca401ddb897f216858972688b7ff02ad70f98e2110
+        creationTimestamp: null
+        labels:
+          app: amundsen
+          component: frontend
+          release: amundsen
+      spec:
+        containers:
+        - args:
+          - -w
+          - "4"
+          - --bind
+          - :5000
+          - amundsen_application.wsgi
+          command:
+          - gunicorn
+          envFrom:
+          - configMapRef:
+              name: amundsen-frontend
+          image: 758725034686.dkr.ecr.us-west-2.amazonaws.com/amundsen:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthcheck
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: amundsen-frontend
+          ports:
+          - containerPort: 5000
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthcheck
+              port: 5000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2022-03-09T16:17:40Z"
+      lastUpdateTime: "2022-03-09T16:17:40Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2022-02-02T03:16:44Z"
+      lastUpdateTime: "2022-03-10T00:06:15Z"
+      message: ReplicaSet "amundsen-frontend-5c6c6b89cc" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 47
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "3"
+      meta.helm.sh/release-name: amundsen
+      meta.helm.sh/release-namespace: amundsen
+    creationTimestamp: "2021-12-13T07:22:43Z"
+    generation: 29
+    labels:
+      app: amundsen
+      app.kubernetes.io/managed-by: Helm
+      chart: amundsen-2.1.2
+      component: metadata
+      heritage: Helm
+      release: amundsen
+    name: amundsen-metadata
+    namespace: amundsen
+    resourceVersion: "31064323"
+    uid: bef90db2-b714-429d-9c8b-de0600e58236
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: amundsen
+        component: metadata
+        release: amundsen
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          checksum/config: 9b484bc365d524b03fa8b0fa0aa46d79c7a4e91c8bf4ba25eed9dab8c0ae4764
+        creationTimestamp: null
+        labels:
+          app: amundsen
+          component: metadata
+          release: amundsen
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: amundsen-metadata
+          image: amundsendev/amundsen-metadata:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthcheck
+              port: 5002
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: amundsen-metadata
+          ports:
+          - containerPort: 5002
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2022-03-09T08:07:22Z"
+      lastUpdateTime: "2022-03-09T08:07:22Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2021-12-13T07:22:43Z"
+      lastUpdateTime: "2022-03-10T00:05:27Z"
+      message: ReplicaSet "amundsen-metadata-847df8966" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 29
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      meta.helm.sh/release-name: amundsen
+      meta.helm.sh/release-namespace: amundsen
+    creationTimestamp: "2021-12-13T07:22:43Z"
+    generation: 4
+    labels:
+      app: amundsen
+      app.kubernetes.io/managed-by: Helm
+      chart: amundsen-2.1.2
+      component: search
+      heritage: Helm
+      release: amundsen
+    name: amundsen-search
+    namespace: amundsen
+    resourceVersion: "31355098"
+    uid: d1b46478-5e3e-49e1-a7c1-a26bb428beea
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: amundsen
+        component: search
+        release: amundsen
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          checksum/config: 90f5505b2670eaaddde45340e9094980aa788757734a3199ca3a6abca62e3c80
+        creationTimestamp: null
+        labels:
+          app: amundsen
+          component: search
+          release: amundsen
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: amundsen-search
+          image: amundsendev/amundsen-search:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthcheck
+              port: 5001
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: amundsen-search
+          ports:
+          - containerPort: 5001
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2021-12-13T07:22:43Z"
+      lastUpdateTime: "2022-03-10T00:05:24Z"
+      message: ReplicaSet "amundsen-search-75dfddf495" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2022-03-10T21:12:53Z"
+      lastUpdateTime: "2022-03-10T21:12:53Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 4
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"kibana"},"name":"kibana","namespace":"amundsen"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"kibana"}},"template":{"metadata":{"labels":{"app":"kibana"}},"spec":{"containers":[{"env":[{"name":"ELASTICSEARCH_URL","value":"http://amundsen-elasticsearch-master:9200"}],"image":"docker.elastic.co/kibana/kibana:7.2.0","name":"kibana","ports":[{"containerPort":5601}],"resources":{"limits":{"cpu":"1000m"},"requests":{"cpu":"100m"}}}]}}}}
+    creationTimestamp: "2022-03-10T21:28:21Z"
+    generation: 2
+    labels:
+      app: kibana
+    name: kibana
+    namespace: amundsen
+    resourceVersion: "31360174"
+    uid: 9d1f3b96-de34-460c-bb83-5b3eb869639b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: kibana
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: kibana
+      spec:
+        containers:
+        - env:
+          - name: ELASTICSEARCH_URL
+            value: http://amundsen-elasticsearch-master:9200
+          image: docker.elastic.co/kibana/kibana:7.2.0
+          imagePullPolicy: IfNotPresent
+          name: kibana
+          ports:
+          - containerPort: 5601
+            protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+            requests:
+              cpu: 100m
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2022-03-10T21:28:54Z"
+      lastUpdateTime: "2022-03-10T21:28:54Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2022-03-10T21:28:21Z"
+      lastUpdateTime: "2022-03-10T21:34:43Z"
+      message: ReplicaSet "kibana-c5c7c49bb" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "4"
+      meta.helm.sh/release-name: amundsen
+      meta.helm.sh/release-namespace: amundsen
+    creationTimestamp: "2021-12-13T07:22:43Z"
+    generation: 6
+    labels:
+      app: amundsen
+      app.kubernetes.io/managed-by: Helm
+      chart: amundsen-2.1.2
+      component: neo4j
+      heritage: Helm
+      release: amundsen
+    name: neo4j
+    namespace: amundsen
+    resourceVersion: "7267336"
+    uid: 8912c39d-f196-4f38-8f37-1f38399a44c3
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: amundsen
+        component: neo4j
+        release: amundsen
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: amundsen
+          component: neo4j
+          release: amundsen
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: svc
+                  operator: In
+                  values:
+                  - neo4j
+        containers:
+        - env:
+          - name: NEO4J_CONF
+            value: /conf
+          image: neo4j:3.3.0
+          imagePullPolicy: IfNotPresent
+          name: neo4j
+          ports:
+          - containerPort: 7474
+            protocol: TCP
+          - containerPort: 7687
+            protocol: TCP
+          - containerPort: 1337
+            protocol: TCP
+          resources:
+            requests:
+              memory: 5Gi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /conf
+            name: conf
+          - mountPath: /var/lib/neo4j/plugins
+            name: plugins
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - /bin/sh
+          - -c
+          - |
+            curl -L https://github.com/neo4j-contrib/neo4j-apoc-procedures/releases/download/3.3.0.4/apoc-3.3.0.4-all.jar -O
+            curl -L https://github.com/neo4j-contrib/neo4j-graph-algorithms/releases/download/3.3.5.0/graph-algorithms-algo-3.3.5.0.jar -O
+            curl -L https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-core/1.11.250/aws-java-sdk-core-1.11.250.jar -O
+            curl -L https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.11.250/aws-java-sdk-s3-1.11.250.jar -O
+            curl -L https://repo1.maven.org/maven2/org/apache/httpcomponents/httpclient/4.5.4/httpclient-4.5.4.jar -O
+            curl -L https://repo1.maven.org/maven2/org/apache/httpcomponents/httpcore/4.4.8/httpcore-4.4.8.jar -O
+            curl -L https://repo1.maven.org/maven2/joda-time/joda-time/2.9.9/joda-time-2.9.9.jar -O
+            chmod 755 *.jar
+            mv *.jar /var/lib/neo4j/plugins
+          image: appropriate/curl:latest
+          imagePullPolicy: IfNotPresent
+          name: init-neo4j-plugins
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/neo4j/plugins
+            name: plugins
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: neo4j-configmap
+          name: conf
+        - emptyDir: {}
+          name: plugins
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2021-12-17T09:06:07Z"
+      lastUpdateTime: "2021-12-17T09:06:07Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2021-12-13T07:22:43Z"
+      lastUpdateTime: "2021-12-17T19:46:16Z"
+      message: ReplicaSet "neo4j-5979cb5d6b" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 6
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

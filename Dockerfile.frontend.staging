@@ -16,11 +16,31 @@ COPY --from=node-stage /app /app
 COPY ./frontend /app
 COPY requirements-dev.txt /app/requirements-dev.txt
 COPY requirements-common.txt /app/requirements-common.txt
-RUN pip3 install -e . --force-reinstall MarkupSafe==2.0.1
+RUN pip3 install -e .
 
 CMD [ "python3",  "amundsen_application/wsgi.py" ]
 
+
+
+FROM base as release
+
 FROM base as oidc-release
+
+RUN pip3 install -e .[oidc]
+ENV FRONTEND_SVC_CONFIG_MODULE_CLASS amundsen_application.oidc_config.OidcConfig
+ENV APP_WRAPPER flaskoidc
+ENV APP_WRAPPER_CLASS FlaskOIDC
+ENV FLASK_OIDC_WHITELISTED_ENDPOINTS status,healthcheck,health
+ENV SQLALCHEMY_DATABASE_URI sqlite:///sessions.db
+
+# You will need to set these environment variables in order to use the oidc image
+ENV FLASK_OIDC_CONFIG_URL https://hippo-inc-dev.onelogin.com/oidc/2/.well-known/openid-configuration
+ENV FLASK_OIDC_PROVIDER_NAME onelogin
+ENV FLASK_OIDC_CLIENT_ID 24a4d400-6c20-013a-5125-0248ae8f63a3204551
+ENV FLASK_OIDC_CLIENT_SECRET 0feaab6870be32954f4d1792adab6fae425569f19a62509c0ab8bd67fe65e9bb
+ENV FLASK_OIDC_REDIRECT_URI /authorization-code/callback
+
+FROM base as oidc-okta
 
 RUN pip3 install -e .[oidc]
 ENV FRONTEND_SVC_CONFIG_MODULE_CLASS amundsen_application.oidc_config.OidcConfig
@@ -33,7 +53,5 @@ ENV SQLALCHEMY_DATABASE_URI sqlite:///sessions.db
 ENV FLASK_OIDC_CONFIG_URL https://dev-23343625.okta.com/.well-known/openid-configuration
 ENV FLASK_OIDC_PROVIDER_NAME okta
 ENV FLASK_OIDC_CLIENT_ID 0oa3t3120sCnYzuQZ5d7
-ENV FLASK_OIDC_CLIENT_SECRET S1FcZzl02YqpXrNqyQi7noixX5K8VHVjCE19bSZ1
-ENV FLASK_OIDC_REDIRECT_URI /auth
-
-FROM base as release
+ENV FLASK_OIDC_CLIENT_SECRET ZIuURwhHoJCgy1Tz515xAsv1BQBd0lYXQLBkHorL
+ENV FLASK_OIDC_REDIRECT_URI /authorization-code/callback

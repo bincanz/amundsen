@@ -52,16 +52,18 @@ neo4j_user = 'neo4j'
 neo4j_password = 'test'
 
 LOGGER = logging.getLogger(__name__)
-
+DATE_TAG = '03-22-2022'
 
 # todo: connection string needs to change
 def connection_string():
-    user = 'username'
-    host = 'localhost'
-    port = '5432'
-    db = 'postgres'
-    return "postgresql://%s@%s:%s/%s" % (user, host, port, db)
-
+    # user = 'username'
+    # host = 'localhost'
+    # port = '5432'
+    # db = 'postgres'
+    #return "postgresql://%s@%s:%s/%s" % (user, host, port, db)
+    #return "postgres://billing_service:d0e4457a1d090e56495c33a99da668bf59317ff2@dev.cvoubypmy8fh.us-west-2.rds.amazonaws.com:5432/billing_service_db"
+    # return "postgres://develop_rw:P4FqU5nkJ7KEVyTcTW24qzbw4cJ5nvsv@pod-dev.cvoubypmy8fh.us-west-2.rds.amazonaws.com:5432/develop"
+    return "postgres://billing_service:B9cFXm04HfwGbM5ohP63dZtrvATICsb7@staging.clv5lxmu2lpv.us-west-2.rds.amazonaws.com:5432/billing_service_db" #billing stg
 
 def run_postgres_job():
     where_clause_suffix = textwrap.dedent("""
@@ -84,7 +86,7 @@ def run_postgres_job():
         f'publisher.neo4j.{neo4j_csv_publisher.NEO4J_END_POINT_KEY}': neo4j_endpoint,
         f'publisher.neo4j.{neo4j_csv_publisher.NEO4J_USER}': neo4j_user,
         f'publisher.neo4j.{neo4j_csv_publisher.NEO4J_PASSWORD}': neo4j_password,
-        f'publisher.neo4j.{neo4j_csv_publisher.JOB_PUBLISH_TAG}': 'unique_tag',  # should use unique tag here like {ds}
+        f'publisher.neo4j.{neo4j_csv_publisher.JOB_PUBLISH_TAG}': DATE_TAG,  # should use unique tag here like {ds}
     })
     job = DefaultJob(conf=job_config,
                      task=DefaultTask(extractor=PostgresMetadataExtractor(), loader=FsNeo4jCSVLoader()),
